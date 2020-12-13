@@ -11,7 +11,8 @@ app = Flask(__name__)
 
 dynamodb = boto3.resource("dynamodb",
     aws_access_key_id= os.getenv("ACCESS_KEY_ID"),
-    aws_secret_access_key= os.getenv("ACCESS_SECRET_KEY")
+    aws_secret_access_key= os.getenv("ACCESS_SECRET_KEY"),
+    region_name= os.getenv("REGION")
     #aws_session_token= keys.ACCESS_SESSION_TOKEN
     )
 
