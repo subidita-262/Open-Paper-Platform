@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Registration</title>
+</head>
+<body>
+<div class="container">
+	<form action = "/signup" method="post">
+	<div class="reg-box">
+		<h1>Register here</h1>
+		<div class="textbox">
+			<label for="username">Username :</label>
+			<input type="text" name="name" required>
+		</div>
+		<div class="textbox">
+			<label for="email">Email-Id :</label>
+			<input type="email" name="email" required>
+		</div>
+		<div class="textbox">
+			<label for="password">Password :</label>
+			<input type="password" name="password" required>
+		</div>
+
+		<button type="submit">Submit</button>
+		<p>Already Have an Account!<a href="{{ url_for('login') }}"><b>Log in</b></a></p>
+</div>
+</div>
+</body>
+</html>
