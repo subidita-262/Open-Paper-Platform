@@ -33,7 +33,9 @@ def check():
         if password == items[0]['password']:
             
             return render_template("home.html",name = name)
-    return render_template("login.html")
+        else:
+        	warning = "Wrong credentials!"
+    return render_template("login.html", msg = warning)
 
 @app.route("/registration")
 def register():
