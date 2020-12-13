@@ -4,9 +4,10 @@ import key_config as keys
 
 app = Flask(__name__)
 # Get the service resource.
-dynamodb = boto3.resource("dynamodb"
-    #aws_access_key_id= keys.ACCESS_KEY_ID,
-    #aws_secret_access_key= keys.ACCESS_SECRET_KEY
+
+dynamodb = boto3.resource("dynamodb",
+    aws_access_key_id= keys.ACCESS_KEY_ID,
+    aws_secret_access_key= keys.ACCESS_SECRET_KEY
     #aws_session_token= keys.ACCESS_SESSION_TOKEN
     )
 
