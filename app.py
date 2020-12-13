@@ -1,13 +1,17 @@
 from flask import Flask, render_template, request
 import boto3
-import key_config as keys
+#import key_config as keys
+import os
+from dotenv import load_dotenv
+
+load_dotenv(".env")
 
 app = Flask(__name__)
 # Get the service resource.
 
 dynamodb = boto3.resource("dynamodb",
-    aws_access_key_id= keys.ACCESS_KEY_ID,
-    aws_secret_access_key= keys.ACCESS_SECRET_KEY
+    aws_access_key_id= os.getenv("ACCESS_KEY_ID"),
+    aws_secret_access_key= os.getenv("ACCESS_SECRET_KEY")
     #aws_session_token= keys.ACCESS_SESSION_TOKEN
     )
 
@@ -24,7 +28,7 @@ def check():
         email = request.form['email']
         password = request.form['password']
         
-        table = dynamodb.Table('users')
+        table = dynamodb.Table('userdata')
         response = table.query(
                 KeyConditionExpression=Key('email').eq(email)
         )
@@ -49,7 +53,7 @@ def signup():
     	email = request.form['email']
     	password = request.form['password']
 
-    	table = dynamodb.Table('users')
+    	table = dynamodb.Table('userdata')
 
     	table.put_item(
     		Item={

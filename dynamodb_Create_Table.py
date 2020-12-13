@@ -3,9 +3,9 @@ import boto3
 
 import key_config as keys
 
-dynamodb = boto3.resource("dynamodb"
-    #aws_access_key_id= keys.ACCESS_KEY_ID,
-    #aws_secret_access_key= keys.ACCESS_SECRET_KEY
+dynamodb = boto3.resource("dynamodb",
+    aws_access_key_id= keys.ACCESS_KEY_ID,
+    aws_secret_access_key= keys.ACCESS_SECRET_KEY
     #aws_session_token= keys.ACCESS_SESSION_TOKEN
     )
 
@@ -13,15 +13,11 @@ dynamodb = boto3.resource("dynamodb"
 
 # Create the DynamoDB table.
 table = dynamodb.create_table(
-    TableName='users',
+    TableName='userdata',
     KeySchema=[
         {
             'AttributeName': 'email',
             'KeyType': 'HASH'
-        },
-        {
-            'AttributeName': 'password',
-            'KeyType': 'RANGE'
         }
         
     ],
@@ -30,10 +26,6 @@ table = dynamodb.create_table(
             'AttributeName': 'email',
             'AttributeType': 'S'
         },
-        {
-            'AttributeName': 'password',
-            'AttributeType': 'S'
-        }
     ],
     ProvisionedThroughput={
         'ReadCapacityUnits': 5,
@@ -42,7 +34,7 @@ table = dynamodb.create_table(
 )
 
 # Wait until the table exists.
-table.meta.client.get_waiter('table_exists').wait(TableName='users')
+table.meta.client.get_waiter('table_exists').wait(TableName='userdata')
 
 # Print out some data about the table.
 print(table.item_count)
