@@ -1,22 +1,17 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, session, url_for
 import boto3
 #import key_config as keys
 import os
+import random, string
 from dotenv import load_dotenv
+from Process import User_info, Check_info
 
 load_dotenv(".env")
 
 app = Flask(__name__)
+app.secret_key = 'BXDjbdasd1234GRPSJK456'
 # Get the service resource.
 
-dynamodb = boto3.resource("dynamodb",
-    aws_access_key_id= os.getenv("ACCESS_KEY_ID"),
-    aws_secret_access_key= os.getenv("ACCESS_SECRET_KEY"),
-    region_name= os.getenv("REGION")
-    #aws_session_token= keys.ACCESS_SESSION_TOKEN
-    )
-
-from boto3.dynamodb.conditions import Key, Attr
 
 @app.route("/")
 def login():
@@ -25,20 +20,18 @@ def login():
 @app.route('/check',methods = ['post'])
 def check():
     if request.method =='POST':
-        
+        session.pop('user_id', None)
         email = request.form['email']
         password = request.form['password']
-        
-        table = dynamodb.Table('userdata')
-        response = table.query(
-                KeyConditionExpression=Key('email').eq(email)
-        )
-        items = response['Items']
-        name = items[0]['name']
-        print(items[0]['password'])
-        if password == items[0]['password']:
-            
-            return render_template("home.html",name = name)
+        user = Check_info(email, password)
+        user.check_user()
+        ret_values = user.get_list()
+        #print(ret_values)
+        name = ret_values[1]
+        user_id = ret_values[2]
+        if ret_values[0] == True:
+            session['user_id'] = user_id
+            return render_template("home.html",name = name, user_id = user_id)
         else:
         	warning = "Wrong credentials!"
     return render_template("login.html", msg = warning)
@@ -53,16 +46,9 @@ def signup():
     	name = request.form['name']
     	email = request.form['email']
     	password = request.form['password']
+    	newuser = User_info(name, email, password)
+    	newuser.insert_item()
 
-    	table = dynamodb.Table('userdata')
-
-    	table.put_item(
-    		Item={
-    		'name': name,
-    		'email': email,
-    		'password': password
-    		}
-    		)
     	msg = "Registration Complete. Please Login to your account !"
     	return render_template('login.html',msg = msg)
     return render_template("Registration.html")
